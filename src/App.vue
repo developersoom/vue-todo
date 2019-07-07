@@ -1,28 +1,73 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <todo-header></todo-header>
+    <todo-input v-on:addTodo="addItem"></todo-input>
+    <todo-list
+      v-bind:itemList="itemList"
+      v-on:checkRemove="removeItem"
+      v-on:checkComplete="completeItem"
+    ></todo-list>
+    <todo-footer v-on:clearAll="clearItems"></todo-footer>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoHeader from "./components/TodoHeader.vue";
+import TodoInput from "./components/TodoInput.vue";
+import TodoList from "./components/TodoList.vue";
+import TodoFooter from "./components/TodoFooter.vue";
 
 export default {
-  name: 'app',
+  name: "app",
+  data() {
+    return {
+      itemList: []
+    };
+  },
   components: {
-    HelloWorld
+    TodoHeader,
+    TodoInput,
+    TodoList,
+    TodoFooter
+  },
+  created() {
+    Object.values(localStorage).filter(item => {
+      if (item !== "SILENT") this.itemList.push(JSON.parse(item));
+    });
+  },
+  methods: {
+    addItem(item) {
+      localStorage.setItem(item.title, JSON.stringify(item));
+      this.itemList.push(item);
+    },
+    removeItem(index) {
+      localStorage.removeItem(this.itemList[index].title);
+      this.itemList.splice(index, 1);
+    },
+    completeItem(index) {
+      this.itemList[index].completed = !this.itemList[index].completed;
+      localStorage.removeItem(this.itemList[index].title);
+      localStorage.setItem(
+        this.itemList[index].title,
+        JSON.stringify(this.itemList[index])
+      );
+    },
+    clearItems() {
+      localStorage.clear();
+      this.itemList = [];
+    }
   }
-}
+};
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap");
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-family: "Do Hyeon", sans-serif;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  width: 80%;
 }
 </style>
