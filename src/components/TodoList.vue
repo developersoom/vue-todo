@@ -1,6 +1,11 @@
 <template>
   <b-list-group class="list-container">
-    <b-list-group-item class="item-container" v-for="(item, index) in itemList" v-bind:key="item.title" v-bind:class="{ completed: item.completed}">
+    <b-list-group-item
+      class="item-container"
+      v-for="(item, index) in itemList"
+      :key="item.title"
+      :class="{ completed: item.completed}"
+    >
       <i class="check-complete fas fa-check" @click="checkComplete(index)"></i>
       <span class="item-title">{{ item.title }}</span>
       <i class="check-remove far fa-trash-alt" @click="checkRemove(index)"></i>
@@ -10,32 +15,33 @@
 
 <script>
 export default {
-  props: ["itemList"],
-  methods: {
-    checkComplete(index) {
-      this.$emit("checkComplete", index);
-    },
-    checkRemove(index) {
-      this.$emit("checkRemove", index);
-    }
-  }
+	// FIXME -> vue stylde guide 참고해서 다른 방식 {itemList: {..}} 요 방식으로 한 번 고쳐보세요
+	props: ['itemList'],
+	methods: {
+		checkComplete(index) {
+			this.$emit('checkComplete', index);
+		},
+		checkRemove(index) {
+			this.$emit('checkRemove', index);
+		},
+	},
 };
 </script>
 
 <style scoped>
 .item-container {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 .check-complete {
-  cursor: pointer;
+	cursor: pointer;
 }
 .check-remove {
-  cursor: pointer;
-  color: rgba(72, 71, 77, 0.877);
+	cursor: pointer;
+	color: rgba(72, 71, 77, 0.877);
 }
 .completed {
-  color: rgba(156, 154, 154, 0.836);
-  text-decoration: line-through;
+	color: rgba(156, 154, 154, 0.836);
+	text-decoration: line-through;
 }
 </style>
